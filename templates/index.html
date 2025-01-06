@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Eco-Route Feedback</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+    <h1>Eco-Route Feedback System</h1>
+    <p>Your Points: <span id="user_points">{{ user_points }}</span></p>
+
+    <h2>Report Traffic/Environmental Issue</h2>
+    <textarea id="feedback" rows="4" cols="50" placeholder="Describe the issue..."></textarea><br>
+    <button id="submit_feedback">Submit Report</button>
+
+    <h2>Traffic Data</h2>
+    <button id="get_traffic_data">Show Traffic Data</button>
+    <p id="traffic_data"></p>
+
+    <h2>Emissions Impact</h2>
+    <button id="show_emissions">Show Emission Impact</button>
+    <img id="emission_plot" src="" style="display:none; max-width: 600px; margin-top: 10px;">
+
+    <h2>Reset Points</h2>
+    <button id="reset_points">Reset Points</button>
+
+    <script>
+        $(document).ready(function () {
+            $("#submit_feedback").click(function () {
+                const feedback = $("#feedback").val();
+                $.post("/submit_feedback", { feedback: feedback }, function (data) {
+                    alert(data.message);
+                    $("#user_points").text(data.points);
+                    $("#feedback").val("");
+                });
+            });
+
+            $("#get_traffic_data").click(function () {
+                $.get("/traffic_data", function (data) {
+                    if (data.error) {
+                        $("#traffic_data").text(data.error);
+                    } else {
+                        $("#traffic_data").text(`Distance: ${data.distance}, Duration: ${data.duration}`);
+                    }
+                });
+            });
+
+            $("#show_emissions").click(function () {
+                $.get("/emission_impact", function (data) {
+                    $("#emission_plot").attr("src", data.plot_url).show();
+                });
+            });
+
+            $("#reset_points").click(function () {
+                $.post("/reset_points", function (data) {
+                    alert(data.message);
+                    $("#user_points").text(data.points);
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

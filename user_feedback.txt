@@ -2,4 +2,3 @@ Problem Statement: Dynamic Route Optimization and Emission Reduction System
 Tagline: Empowering Sustainable and Transparent Travel
 
 Going to Build....Reported Issue: Here more traffic
-
